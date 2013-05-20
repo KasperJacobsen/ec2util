@@ -1,0 +1,5 @@
+*.pyc
+build/
+dist/
+ec2util.egg-info/
+
