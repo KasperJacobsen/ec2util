@@ -78,13 +78,13 @@ class aws:
 		self.checkForInstanceState(instance, "stopped")
 
 	def printInstances(self):
-		table = prettytable.PrettyTable(['Id', 'Name', 'Type', 'State'])
+		table = prettytable.PrettyTable(['Id', 'Name', 'Type', 'State', 'IP'])
 		table.padding_width = 1
 		table.align["Name"] = "l" 
 		instances = self.getInstances()
 		for instance in instances:
 			#print(instance.__dict__)
-			table.add_row([instance.id, instance.tags['Name'], instance.instance_type, instance.state])
+			table.add_row([instance.id, instance.tags['Name'], instance.instance_type, instance.state, instance.ip_address])
 		print table
 
 	def printImages(self):
@@ -201,6 +201,19 @@ class aws:
 		self.checkForVolumeState(volume, "in-use")
 		print "Volume attached"
 		return volume
+
+	def deleteVolume(self, volume_id):
+		answer = raw_input("Are you sure you want to delete volume " + volume_id + "? y/n [n]: ")
+		if answer != 'y':
+			print "canceling.."
+			return
+		print "Deleting " + volume_id
+		volume = self.getVolume(volume_id)
+		success = volume.delete()
+		if success:
+			print "Volume deleted"
+		else:
+			print "Action failed"
 
 	def createVolume(self, size, az, snapshotId=None):
 		print "Creating " + str(size) + "GB volume in " + az

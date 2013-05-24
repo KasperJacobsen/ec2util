@@ -8,6 +8,7 @@ Usage:
   ec2util attach <volume_id> <instance_id> <mapping>
   ec2util detach <volume_id>
   ec2util enlarge <volume_id> <size>
+  ec2util delete volume <volume_id>
   ec2util create snapshot <volume_id> <name>
   ec2util create volume <size> <zone> [<snapshot_id>]
   ec2util config
@@ -92,7 +93,8 @@ def connectToAws():
 	return myAws
 
 def cli():
-	args = docopt.docopt(__doc__, version='ec2util 0.1.4')
+	
+	args = docopt.docopt(__doc__, version='ec2util 0.1.5')
 
 	if(args['config']):
 		config()
@@ -105,6 +107,9 @@ def cli():
 		myAws.detachVolume(args['<volume_id>'])
 	if(args['attach']):
 		myAws.attachVolume(args['<volume_id>'], args['<instance_id>'], args['<mapping>'])
+	if(args['delete']):
+		if args['volume']:
+			myAws.deleteVolume(args['<volume_id>'])
 	if(args['enlarge']):
 		myAws.enlargeVolume(args['<volume_id>'], args['<size>'])
 
